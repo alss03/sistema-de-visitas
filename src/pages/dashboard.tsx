@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getVisitas } from "../api/visitas.service";
 import type { PessoasParaVisitar } from "../types/visitas";
 import { parseDataVisita, getDataProximaVisita, isVisitaPendente, formatDateTime } from "../utils/date";
+import { ordenarVisitas } from "../utils/sort";
 
 export const Dashboard: React.FC = () => {
   console.log("=Dashboard exibido");
@@ -38,7 +39,7 @@ export const Dashboard: React.FC = () => {
       <p>Total de usuários: {visitas.length}</p>
 
       <ul>
-        {visitas.map((user) => {
+        {ordenarVisitas(visitas).map((user) => {
           const lastVisit = parseDataVisita(user.last_verified_date);
           const nextVisit = getDataProximaVisita(
             user.last_verified_date,
