@@ -1,8 +1,8 @@
 // funcao para converter string "dd/mm/yyyy hh:mm:ss" em objeto Date
 export function parseDataVisita(input: string): Date {
-    const [datePart, timePart] = input.split("");
+    const [datePart, timePart] = input.split(" ");
 
-    const [day, month, year] = datePart.split("/").map(Number);
+    const [year, month, day] = datePart.split("/").map(Number);
     const [hour = 0, minute = 0, second = 0] =
     timePart?.split(":").map(Number) ?? [];
 
@@ -18,7 +18,7 @@ export function getDataProximaVisita(lastVerified: string, frequencyInDays: numb
 }
 
 // funcao para verificar se a visita está pendente (data atual > data próxima visita)
-export function isVisitaPendente(lastVerified: string, frequencyInDays: number, now: Date = new Date): boolean {
+export function isVisitaPendente(lastVerified: string, frequencyInDays: number, now: Date = new Date()): boolean {
     const next = getDataProximaVisita(lastVerified, frequencyInDays);
     return next.getTime() < now.getTime();
 }

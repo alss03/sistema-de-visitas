@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { getVisitas } from "../api/visitas.service";
 import type { PessoasParaVisitar } from "../types/visitas";
+import { parseDataVisita, getDataProximaVisita, isVisitaPendente, formatDateTime } from "../utils/date";
 
 export const Dashboard: React.FC = () => {
+  console.log("=Dashboard exibido");
+
     const [visitas, setVisitas] = useState<PessoasParaVisitar[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
@@ -30,18 +33,41 @@ export const Dashboard: React.FC = () => {
     }
 
     return (
-        <main style={{ padding: "2rem", fontFamily: "sans-serif" }}>
+    <main>
       <h1>Sistema de Visitas</h1>
       <p>Total de usuários: {visitas.length}</p>
 
       <ul>
-        {visitas.map((visitado) => (
-          <li key={visitado.id}>
-            <strong>{visitado.name}</strong> - CPF: {visitado.cpf} - Ativo:{" "}
-            {visitado.active ? "Sim" : "Não"} - Última visita: {visitado.last_verified_date}
-            - Frequência em dias para a próxima visita: {visitado.verify_frequency_in_days}
-          </li>
-        ))}
+        {visitas.map((user) => {
+          const lastVisit = parseDataVisita(user.last_verified_date);
+          const nextVisit = getDataProximaVisita(
+            user.last_verified_date,
+            user.verify_frequency_in_days
+          );
+          const pending = isVisitaPendente(
+            user.last_verified_date,
+            user.verify_frequency_in_days
+          );
+
+          return (
+            <li
+              key={user.id}
+            >
+              <strong>{user.name}</strong> - CPF: {user.cpf}
+              <br />
+              Última visita: {formatDateTime(lastVisit)}
+              <br />
+              Próxima visita: {formatDateTime(nextVisit)}
+              <br />
+              Status:{" "}
+              {pending
+                ? "Pendência de visita"
+                : user.active
+                ? "Em dia"
+                : "Inativo"}
+            </li>
+          );
+        })}
       </ul>
     </main>
   );
