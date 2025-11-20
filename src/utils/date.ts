@@ -1,11 +1,16 @@
 // funcao para converter string "dd/mm/yyyy hh:mm:ss" em objeto Date
 export function parseDataVisita(input: string): Date {
+    // separar data e hora
     const [datePart, timePart] = input.split(" ");
 
+    // separar dia, mes, ano
     const [year, month, day] = datePart.split("/").map(Number);
+
+    // separar hora, minuto, segundo
     const [hour = 0, minute = 0, second = 0] =
     timePart?.split(":").map(Number) ?? [];
 
+    // criar objeto Date
     return new Date(year, month - 1, day, hour, minute, second);
 }
 
@@ -23,6 +28,7 @@ export function isVisitaPendente(lastVerified: string, frequencyInDays: number, 
     return next.getTime() < now.getTime();
 }
 
+// funcao para formatar objeto Date em string "dd/mm/yyyy hh:mm"
 export function formatDateTime(date: Date): string {
     return date.toLocaleString("pt-BR", {
     day: "2-digit",

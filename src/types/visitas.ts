@@ -1,3 +1,4 @@
+// interface que contem informacoes das pessoas a serem visitadas
 export interface PessoasParaVisitar {
     id: string;
     name: string;
