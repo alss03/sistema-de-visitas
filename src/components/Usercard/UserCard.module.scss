@@ -21,13 +21,13 @@
 .name {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #2d3748;
+  color: #2d3748; // criar variavel para cor
 }
 
 // informação adicional do usuario
 .info {
   font-size: 0.9rem;
-  color: #4a5568;
+  color: #4a5568; // criar variavel para cor
 }
 
 // status do usuario
@@ -39,15 +39,15 @@
 
 // variacao de cor para diferentes status
 .statusPending {
-  color: #c53030; // vermelho
+  color: #c53030; // criar variavel para cor
 }
 
 // variacao de cor para status ok
 .statusOk {
-  color: #2f855a; // verde
+  color: #2f855a; // criar variavel para cor
 }
 
 // variacao de cor para status inativo
 .statusInactive {
-  color: #718096; // cinza
+  color: #718096; // criar variavel para cor
 }
