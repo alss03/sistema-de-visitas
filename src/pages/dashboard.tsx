@@ -6,6 +6,7 @@ import { UserCard } from "../components/Usercard/UserCard";
 import styles from "./Dashboard.module.scss";
 import { isVisitaPendente } from "../utils/date";
 
+// definir tipos de filtro
 type FiltroVisitas = "todas" | "pendentes" | "ativas" | "inativas";
 
 
