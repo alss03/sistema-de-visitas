@@ -1,0 +1,53 @@
+// Estilos para o componente UserCard
+.card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1rem;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+
+  // sombra ao passar o mouse
+  transition: box-shadow 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
+}
+
+// estilos para os elementos internos do UserCard
+.name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2d3748;
+}
+
+// informação adicional do usuario
+.info {
+  font-size: 0.9rem;
+  color: #4a5568;
+}
+
+// status do usuario
+.status {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+// variacao de cor para diferentes status
+.statusPending {
+  color: #c53030; // vermelho
+}
+
+// variacao de cor para status ok
+.statusOk {
+  color: #2f855a; // verde
+}
+
+// variacao de cor para status inativo
+.statusInactive {
+  color: #718096; // cinza
+}

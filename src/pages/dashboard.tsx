@@ -3,6 +3,7 @@ import { getVisitas } from "../api/visitas.service";
 import type { PessoasParaVisitar } from "../types/visitas";
 import { ordenarVisitas } from "../utils/sort";
 import { UserCard } from "../components/Usercard/UserCard";
+import styles from "./Dashboard.module.scss";
 
 
 // componente Dashboard
@@ -43,14 +44,13 @@ export const Dashboard: React.FC = () => {
 
     // renderizar lista de visitas
     return (
-    <main>
-      <h1>Sistema de Visitas</h1>
-      <p>Total de usuários: {visitas.length}</p>
+    <main className={styles.container}>
+      <h1 className={styles.title}>Sistema de Visitas</h1>
+      <p className={styles.subtitle}>
+        Total de usuários: {visitasOrdenadas.length}
+      </p>
 
-      {/* renderizar lista ordenada de visitas */}
-
-      <ul>
-        {/* mapear cada usuario para um UserCard */}
+      <ul className={styles.list}>
         {visitasOrdenadas.map((user) => (
           <UserCard key={user.id} user={user} />
         ))}
