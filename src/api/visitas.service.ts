@@ -41,7 +41,7 @@ export async function getVisitas(): Promise<PessoasParaVisitar[]> {
 
 
 // PATCH – registra visita
-export async function registrarVisita(id: string): Promise<void> {
+export async function registrarVisita(id: string): Promise<string> {
     // formata payload
   const formattedDate = formatNowForApi();
   // monta o payload
@@ -57,4 +57,6 @@ export async function registrarVisita(id: string): Promise<void> {
   });
 
   console.log(`PATCH /visitas/${id} sucesso`);
+
+  return formattedDate;
 }

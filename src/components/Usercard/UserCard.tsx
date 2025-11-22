@@ -15,11 +15,13 @@ export const UserCard: React.FC<UserCardProps> = ({ user }) => {
 
   // converte ultima data de visita
   const lastVisit = parseDataVisita(user.last_verified_date);
+
   // calcula próxima data de visita
   const nextVisit = getDataProximaVisita(
     user.last_verified_date,
     user.verify_frequency_in_days
   );
+
   // verifica se a visita esta pendente
   const pending = isVisitaPendente(
     user.last_verified_date,
@@ -43,15 +45,15 @@ export const UserCard: React.FC<UserCardProps> = ({ user }) => {
   // funcao botao registrar visita
   async function handleRegistrarVisita() {
     try {
-      await registrarVisita(user.id);
+      const newLastVerified = await registrarVisita(user.id);
 
       // envia evento global para o Dashboard atualizar o estado
       const event = new CustomEvent("visita-registrada", {
-        detail: { id: user.id },
+        detail: { id: user.id, lastVerified: newLastVerified, name: user.name },
       });
       window.dispatchEvent(event);
 
-      alert("Visita registrada com sucesso!");
+      console.log("Visita registrada com sucesso!");
     } catch (err) {
       console.error(err);
       alert("Erro ao registrar visita.");

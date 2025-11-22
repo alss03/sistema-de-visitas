@@ -64,3 +64,37 @@
   flex-direction: column;
   gap: 0.75rem;
 }
+
+// toast de confirmacao
+.toast {
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  background-color: #E4F6F3;
+  color: #2A9D8F;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: 1px solid #2A9D8F;
+  animation: toastFade 3s ease forwards;
+  opacity: 0;
+}
+
+// animacao do toast
+@keyframes toastFade {
+  0% {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  10% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  90% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}

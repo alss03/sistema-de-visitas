@@ -5,10 +5,10 @@ import { ordenarVisitas } from "../utils/sort";
 import { UserCard } from "../components/Usercard/UserCard";
 import styles from "./Dashboard.module.scss";
 import { isVisitaPendente } from "../utils/date";
+import type { VisitaRegistradaEvent } from "../types/events";
 
 // definir tipos de filtro
 type FiltroVisitas = "todas" | "pendentes" | "ativas" | "inativas";
-
 
 // componente Dashboard
 export const Dashboard: React.FC = () => {
@@ -19,6 +19,7 @@ export const Dashboard: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [filtro, setFiltro] = useState<FiltroVisitas>("todas");
+  const [flashMessage, setFlashMessage] = useState<string | null>(null);
 
   // carregar dados ao montar o componente
   useEffect(() => {
@@ -35,6 +36,36 @@ export const Dashboard: React.FC = () => {
     load();
   }, []);
 
+  // ouvir evento global de visita registrada (PATCH) e atualizar estado + toast
+  useEffect(() => {
+    const listener = (ev: Event) => {
+      const { id, lastVerified, name } = (ev as CustomEvent<VisitaRegistradaEvent>).detail;
+
+      // atualizar lista de visitas com nova data
+      setVisitas((prev) =>
+        prev.map((p) =>
+          p.id === id ? { ...p, last_verified_date: lastVerified } : p
+        )
+      );
+
+      // exibir toast de feedback
+      setFlashMessage(`Visita registrada para ${name}`);
+
+      // tempo de exibicao do toast
+      setTimeout(() => {
+        setFlashMessage(null);
+      }, 3000);
+    };
+
+    // adicionar listener
+    window.addEventListener("visita-registrada", listener);
+
+    // remover listener ao desmontar
+    return () => {
+      window.removeEventListener("visita-registrada", listener);
+    };
+  }, []);
+
   // renderizar loading enquanto carrega dados
   if (loading) {
     return <div>Loading...</div>;
@@ -45,7 +76,7 @@ export const Dashboard: React.FC = () => {
     return <div>Error: {error}</div>;
   }
 
-  // ordenar e filtrar visitas
+  // ordenar visitas
   const visitasOrdenadas = ordenarVisitas(visitas);
 
   // aplicar filtro
@@ -70,14 +101,21 @@ export const Dashboard: React.FC = () => {
     }
   });
 
-    // renderizar lista de visitas
-     return (
+  // renderizar lista de visitas
+  return (
     <main className={styles.container}>
       <h1 className={styles.title}>Sistema de Visitas</h1>
       <p className={styles.subtitle}>
         Total de usuários: {visitas.length}{" "}
         {filtro !== "todas" && `• exibindo: ${visitasFiltradas.length}`}
       </p>
+
+      {/* toast/banner de feedback */}
+      {flashMessage && (
+        <div className={styles.toast}>
+          {flashMessage}
+        </div>
+      )}
 
       {/* botoes de filtro */}
       <div className={styles.filters}>
@@ -130,4 +168,4 @@ export const Dashboard: React.FC = () => {
       </ul>
     </main>
   );
-}
+};
