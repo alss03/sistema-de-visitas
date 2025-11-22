@@ -21,6 +21,7 @@ export const Dashboard: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [filtro, setFiltro] = useState<FiltroVisitas>("todas");
   const [flashMessage, setFlashMessage] = useState<string | null>(null);
+  const [busca, setBusca] = useState<string>("");
 
   // carregar dados ao montar o componente
   useEffect(() => {
@@ -89,13 +90,14 @@ export const Dashboard: React.FC = () => {
   const percentualEmDia = ativos === 0 ? 0 : Math.round((emDia / ativos) * 100);
 
   // aplicar filtro
-  const visitasFiltradas = visitasOrdenadas.filter((user) => {
+  const visitasFiltradas = visitasOrdenadas
+  // filtro por status
+  .filter((user) => {
     const pendente = isVisitaPendente(
       user.last_verified_date,
       user.verify_frequency_in_days
     );
 
-    // switch de filtro
     switch (filtro) {
       case "pendentes":
         return user.active && pendente;
@@ -107,6 +109,23 @@ export const Dashboard: React.FC = () => {
       default:
         return true;
     }
+  })
+  // busca por nome/CPF
+  .filter((user) => {
+    const termo = busca.trim();
+    if (!termo) return true;
+
+    const termoLower = termo.toLowerCase();
+    const nomeLower = user.name.toLowerCase();
+
+    const cpfLimpo = user.cpf.replace(/\D/g, "");
+    const termoCpf = termo.replace(/\D/g, "");
+
+    // verificar se o nome ou CPF contem o termo buscado
+    return (
+      nomeLower.includes(termoLower) ||
+      (termoCpf.length > 0 && cpfLimpo.includes(termoCpf))
+    );
   });
 
   // renderizar lista de visitas
@@ -133,6 +152,20 @@ export const Dashboard: React.FC = () => {
         onFilterChange={setFiltro}
       />
 
+      {/* busca por nome/CPF */}
+      <div className={styles.searchRow}>
+        <label className={styles.searchLabel} htmlFor="search">
+          Buscar por nome ou CPF
+        </label>
+        <input
+          id="search"
+          type="text"
+          placeholder="Digite um nome ou CPF..."
+          value={busca}
+          onChange={(e) => setBusca(e.target.value)}
+          className={styles.searchInput}
+        />
+      </div>
       {/* lista de usuarios */}
       <ul className={styles.list}>
         {visitasFiltradas.map((user) => (
