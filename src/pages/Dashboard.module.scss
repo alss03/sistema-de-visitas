@@ -99,6 +99,7 @@
   }
 }
 
+// linha de busca
 .searchRow {
   margin-bottom: 1rem;
   max-width: 420px;
@@ -107,11 +108,13 @@
   gap: 0.25rem;
 }
 
+// label do input de busca
 .searchLabel {
   font-size: 0.8rem;
   color: #718096;
 }
 
+// input de busca
 .searchInput {
   padding: 0.45rem 0.75rem;
   border-radius: 999px;
@@ -120,10 +123,20 @@
   outline: none;
   transition: border-color 0.15s ease, box-shadow 0.15s ease,
     background-color 0.15s ease;
-
+// foco do input de busca
   &:focus {
     border-color: #038c9e;
     box-shadow: 0 0 0 2px rgba(3, 140, 158, 0.2);
     background-color: #ffffff;
   }
+}
+
+// exibicao de quando não ha visitas
+.emptyState {
+  margin-top: 1rem;
+  padding: 1.5rem;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #718096;
+  font-size: 0.95rem;
 }

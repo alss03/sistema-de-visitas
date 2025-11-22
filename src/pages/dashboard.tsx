@@ -167,11 +167,17 @@ export const Dashboard: React.FC = () => {
         />
       </div>
       {/* lista de usuarios */}
-      <ul className={styles.list}>
-        {visitasFiltradas.map((user) => (
-          <UserCard key={user.id} user={user} />
-        ))}
-      </ul>
+      {visitasFiltradas.length === 0 ? (
+        <div className={styles.emptyState}>
+          Nenhum usuário encontrado com os filtros e a busca atuais.
+        </div>
+        ) : (
+        <ul className={styles.list}>
+          {visitasFiltradas.map((user) => (
+            <UserCard key={user.id} user={user} />
+          ))}
+        </ul>
+      )}
     </main>
   );
 };
