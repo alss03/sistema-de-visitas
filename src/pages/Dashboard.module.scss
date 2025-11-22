@@ -1,85 +1,41 @@
-// criar variaveis para cores
 .container {
   padding: 2rem;
   min-height: 100vh;
-  background-color: #F5F9FA;
+  background-color: #f5f9fa;
+
+  // limitar largura em telas muito grandes
+  max-width: 1750px;
+  margin: 0 auto;
 }
 
 // titulo principal
 .title {
   font-size: 1.75rem;
   margin-bottom: 0.5rem;
-  color: #02758A;
+  color: #02758a;
 }
 
 // subtitulo
 .subtitle {
-  margin: 0 0 1.5rem 0;
+  margin: 0 0 1rem 0;
   font-size: 1rem;
-  color: #4A4A4A;
+  color: #4a4a4a;
 }
 
-// filtros
-.filters {
-  display: inline-flex;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-  padding: 0.3rem;
-  background: #FFFFFF;
-  border-radius: 999px;
-  border: 1px solid #D3E3E5;
-}
-
-// botao de filtro
-.filterButton {
-  border: none;
-  background: transparent;
-  padding: 0.35rem 0.9rem;
-  border-radius: 999px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  color: #4A4A4A;
-  transition: 0.2s ease;
-}
-
-// hover do botao de filtro
-.filterButton:hover {
-  background: #E6F5F7;
-  color: #02758A;
-}
-
-// botao de filtro ativo
-.filterButtonActive {
-  background: #038C9E;
-  color: #FFFFFF;
-  font-weight: 600;
-}
-
-// lista de usuarios
-.list {
-  padding: 0;
-  margin: 0;
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-// toast de confirmacao
+// toast com fade-in/out
 .toast {
   margin-bottom: 1rem;
   padding: 0.75rem 1rem;
   border-radius: 6px;
-  background-color: #E4F6F3;
-  color: #2A9D8F;
+  background-color: #e4f6f3;
+  color: #2a9d8f;
   font-size: 0.9rem;
   font-weight: 500;
-  border: 1px solid #2A9D8F;
+  border: 1px solid #2a9d8f;
   animation: toastFade 3s ease forwards;
   opacity: 0;
 }
 
-// animacao do toast
 @keyframes toastFade {
   0% {
     opacity: 0;
@@ -99,19 +55,55 @@
   }
 }
 
-// linha de busca
-.searchRow {
-  margin-bottom: 1rem;
-  max-width: 420px;
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+// layout em 2 colunas (principal + analytics)
+.content {
+  margin-top: 1.5rem;
+  display: grid;
+  grid-template-columns: 2fr 1.2fr;
+  gap: 1.5rem;
+  align-items: flex-start;
 }
 
-// label do input de busca
+// coluna esquerda - cards
+.leftColumn {
+  display: flex;
+  flex-direction: column;
+  margin-top: 1.5rem;
+}
+
+// coluna direita - graficos
+.rightColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+// linha com busca e progressBar
+.searchAndProgressRow {
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-end;
+}
+
+// busca
+.searchGroup {
+  display: flex;
+  flex-direction: row;
+  gap: 0.25rem;
+  min-width: 260px;
+  max-width: 420px;
+  flex: 0 0 360px;
+  align-items: center;
+}
+
+// label da busca
 .searchLabel {
   font-size: 0.8rem;
   color: #718096;
+  padding-right: 10px;
 }
 
 // input de busca
@@ -123,7 +115,7 @@
   outline: none;
   transition: border-color 0.15s ease, box-shadow 0.15s ease,
     background-color 0.15s ease;
-// foco do input de busca
+
   &:focus {
     border-color: #038c9e;
     box-shadow: 0 0 0 2px rgba(3, 140, 158, 0.2);
@@ -131,12 +123,94 @@
   }
 }
 
-// exibicao de quando não ha visitas
+// barra de progresso
+.progressGroup {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+// label da barra de progresso
+.progressLabel {
+  font-size: 0.8rem;
+  color: #718096;
+  white-space: nowrap;
+}
+
+.progressBarWrapper {
+  flex: 1;
+  height: 6px;
+  border-radius: 999px;
+  background-color: #e6f5f7;
+  overflow: hidden;
+}
+
+.progressBarFill {
+  height: 100%;
+  border-radius: 999px;
+  background-color: #2a9d8f;
+  transition: width 0.3s ease;
+}
+
+// porcentagem da barra de progresso
+.progressPercent {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #02758a;
+  min-width: 48px;
+  text-align: right;
+}
+
+// lista de usuarios em grade
+.list {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+// estado vazio
 .emptyState {
-  margin-top: 1rem;
+  margin-top: 0.5rem;
   padding: 1.5rem;
   border-radius: 8px;
   background-color: #ffffff;
+  border: 1px dashed #d3e3e5;
   color: #718096;
   font-size: 0.95rem;
+}
+
+// responsividade
+@media (max-width: 1024px) {
+  // layout em coluna unica
+  .content {
+    grid-template-columns: 1fr;
+  }
+
+  // coluna direita - graficos
+  .rightColumn {
+    margin-top: 1rem;
+    order: -1;
+  }
+
+  // linha com busca e progressBar
+  .searchAndProgressRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  // busca
+  .searchGroup {
+    flex: 1 1 auto;
+    flex-direction: row;
+    max-width: 100%;
+  }
+
+  // barra de progresso
+  .progressGroup {
+    margin-top: 0.5rem;
+  }
 }

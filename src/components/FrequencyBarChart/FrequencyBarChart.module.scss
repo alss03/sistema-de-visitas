@@ -1,18 +1,23 @@
 .card {
-  margin-top: 1rem;
-  margin-bottom: 1.5rem;
   background: #ffffff;
   border: 1px solid #d3e3e5;
   border-radius: 8px;
   padding: 1rem 1.25rem;
 }
 
-// titulo do grafico
+// titulo do card
 .title {
-  margin: 0 0 0.75rem 0;
+  margin: 0 0 0.25rem 0;
   font-size: 1rem;
   font-weight: 600;
   color: #02758a;
+}
+
+// subtitulo do card
+.subtitle {
+  margin: 0 0 0.75rem 0;
+  font-size: 0.85rem;
+  color: #4a4a4a;
 }
 
 // container do grafico
@@ -21,7 +26,7 @@
   height: 260px;
 }
 
-// mensagem de grafico vazio
+// mensagem de sem dados
 .empty {
   font-size: 0.9rem;
   color: #718096;
