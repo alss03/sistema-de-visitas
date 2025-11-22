@@ -173,7 +173,6 @@ export const Dashboard: React.FC = () => {
   // renderizar lista de visitas
   return (
     <main className={styles.container}>
-      <h1 className={styles.title}>Sistema de Visitas</h1>
 
       {/* toast de feedback */}
       {flashMessage && <div className={styles.toast}>{flashMessage}</div>}

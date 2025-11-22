@@ -1,0 +1,117 @@
+// fundo do header
+.header {
+  background-color: #02495a;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+// conteudo central
+.inner {
+  max-width: 1750px;
+  margin: 0 auto;
+  padding: 0.9rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+// grupo com logo e nome
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 1.8rem;
+}
+
+// logo do sistema
+.logo {
+  padding: 0.35rem 1.1rem;
+  border-radius: 10px;
+  border: 2px solid #ffffff;
+  font-weight: 700;
+  font-size: 1.45rem;
+  letter-spacing: 0.06em;
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+// nome dp sistema
+.product {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #f7fafc;
+}
+
+// lado direito: ambiente e user
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+// tag de ambiente
+.envTag {
+  font-size: 0.8rem;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  background-color: rgba(255, 255, 255, 0.12);
+  color: #e6f9ff;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+}
+
+// bloco de user
+.user {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+// avatar com iniciais
+.userAvatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background-color: #ffffff;
+  color: #02495a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+// infos do usuário
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+// nome do usuário
+.userName {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #f7fafc;
+}
+
+// função do usuário
+.userRole {
+  font-size: 0.75rem;
+  color: rgba(226, 232, 240, 0.9);
+}
+
+// responsividade
+@media (max-width: 768px) {
+  // conteudo central
+  .inner {
+    padding: 0.75rem 1rem;
+  }
+
+  // nome dp sistema
+  .product {
+    font-size: 1rem;
+  }
+
+  // tag de ambiente
+  .envTag {
+    display: none;
+  }
+}
