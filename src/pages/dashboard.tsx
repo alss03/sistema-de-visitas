@@ -7,6 +7,8 @@ import styles from "./Dashboard.module.scss";
 import { isVisitaPendente } from "../utils/date";
 import type { VisitaRegistradaEvent } from "../types/events";
 import { StatsBar } from "../components/StatsBar/StatsBar";
+import { StatusPieChart } from "../components/StatusPieChart/StatusPieChart";
+import { FrequencyBarChart } from "../components/FrequencyBarChart/FrequencyBarChart";
 
 // definir tipos de filtro
 type FiltroVisitas = "todas" | "pendentes" | "ativas" | "inativas";
@@ -59,8 +61,10 @@ export const Dashboard: React.FC = () => {
       }, 3000);
     };
 
+    // adicionar listener ao evento global
     window.addEventListener("visita-registrada", listener);
 
+    // cleanup ao desmontar
     return () => {
       window.removeEventListener("visita-registrada", listener);
     };
@@ -79,7 +83,7 @@ export const Dashboard: React.FC = () => {
   // ordenar visitas
   const visitasOrdenadas = ordenarVisitas(visitas);
 
-  // calcular métricas para a StatsBar
+  // calcular metricas para a StatsBar
   const total = visitas.length;
   const ativos = visitas.filter((v) => v.active).length;
   const inativos = visitas.filter((v) => !v.active).length;
@@ -110,14 +114,18 @@ export const Dashboard: React.FC = () => {
         return true;
     }
   })
+  
   // busca por nome/CPF
   .filter((user) => {
+    // limpar termo de busca
     const termo = busca.trim();
     if (!termo) return true;
 
+    // converter para minusculas para comparacao
     const termoLower = termo.toLowerCase();
     const nomeLower = user.name.toLowerCase();
 
+    // limpar CPF para comparacao
     const cpfLimpo = user.cpf.replace(/\D/g, "");
     const termoCpf = termo.replace(/\D/g, "");
 
@@ -127,6 +135,22 @@ export const Dashboard: React.FC = () => {
       (termoCpf.length > 0 && cpfLimpo.includes(termoCpf))
     );
   });
+
+  // preparar dados para o grafico de frequencias
+  const frequenciaMap: Record<number, number> = {};
+
+  // contar frequencias
+  visitas.forEach((v) => {
+    const freq = v.verify_frequency_in_days;
+    if (!frequenciaMap[freq]) frequenciaMap[freq] = 0;
+    frequenciaMap[freq]++;
+  });
+
+  // transformar em array para o grafico
+  const frequenciaData = Object.entries(frequenciaMap).map(([freq, count]) => ({
+    frequency: Number(freq),
+    count: count as number,
+  }));
 
   // renderizar lista de visitas
   return (
@@ -151,6 +175,16 @@ export const Dashboard: React.FC = () => {
         currentFilter={filtro}
         onFilterChange={setFiltro}
       />
+
+        {/* gráfico pizza de status */}
+        <StatusPieChart
+          emDia={emDia}
+          pendentes={pendentes}
+          inativos={inativos}
+        />
+
+        {/* gráfico de distribuição de frequência */}
+        <FrequencyBarChart data={frequenciaData} />
 
       {/* busca por nome/CPF */}
       <div className={styles.searchRow}>
