@@ -49,3 +49,21 @@
 .statusInactive {
   color: #8A8A8A;
 }
+
+.button {
+  margin-top: 0.75rem;
+  background-color: #0085a3;
+  color: #ffffff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: #006c85;
+  }
+}
+

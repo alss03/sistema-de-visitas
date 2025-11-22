@@ -3,14 +3,11 @@ import type { PessoasParaVisitar } from "../types/visitas";
 // URL base da API
 const BASE_URL = "https://tatico.spocws.icu/teste/followups_f38d";
 
-
 // Formata data atual no padrao da API
 function formatNowForApi(): string {
-  const now = new Date();
-  return now
-    .toISOString()
-    .slice(0, 19)
-    .replace("T", " ")
+  return new Date()
+    .toLocaleString("pt-BR", { hour12: false })
+    .replace(",", "")
     .replace(/-/g, "/");
 }
 

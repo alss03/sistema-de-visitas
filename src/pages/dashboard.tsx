@@ -50,7 +50,7 @@ export const Dashboard: React.FC = () => {
 
   // aplicar filtro
   const visitasFiltradas = visitasOrdenadas.filter((user) => {
-    // verificar se a visita está pendente
+    // verificar se a visita esta pendente
     const pendente = isVisitaPendente(
       user.last_verified_date,
       user.verify_frequency_in_days
@@ -79,7 +79,7 @@ export const Dashboard: React.FC = () => {
         {filtro !== "todas" && `• exibindo: ${visitasFiltradas.length}`}
       </p>
 
-      {/* botões de filtro */}
+      {/* botoes de filtro */}
       <div className={styles.filters}>
         <button
           type="button"
@@ -122,7 +122,7 @@ export const Dashboard: React.FC = () => {
         </button>
       </div>
 
-      {/* lista de usuários */}
+      {/* lista de usuarios */}
       <ul className={styles.list}>
         {visitasFiltradas.map((user) => (
           <UserCard key={user.id} user={user} />

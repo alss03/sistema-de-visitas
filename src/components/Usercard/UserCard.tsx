@@ -1,6 +1,7 @@
 import React from "react";
 import type { PessoasParaVisitar } from "../../types/visitas";
 import { parseDataVisita, getDataProximaVisita, isVisitaPendente, formatDateTime } from "../../utils/date";
+import { registrarVisita } from "../../api/visitas.service";
 import styles from "./UserCard.module.scss";
 
 // props do componente UserCard
@@ -12,34 +13,52 @@ interface UserCardProps {
 export const UserCard: React.FC<UserCardProps> = ({ user }) => {
   console.log("=UserCard renderizado para:", user.id, user.name);
 
-  // converter última data de visita
+  // converte ultima data de visita
   const lastVisit = parseDataVisita(user.last_verified_date);
-  // calcular próxima data de visita
+  // calcula próxima data de visita
   const nextVisit = getDataProximaVisita(
     user.last_verified_date,
     user.verify_frequency_in_days
   );
-  // verificar se a visita está pendente
+  // verifica se a visita esta pendente
   const pending = isVisitaPendente(
     user.last_verified_date,
     user.verify_frequency_in_days
   );
 
-  // determinar status inativo/pendente/em dia
+  // determina status inativo/pendente/em dia
   const statusText = !user.active
     ? "Inativo"
     : pending
     ? "Visita Pendente"
     : "Em dia";
 
-  // determinar classe SCSS para o status
+  // determina classe SCSS para o status
   const statusClass = !user.active
     ? styles.statusInactive
     : pending
     ? styles.statusPending
     : styles.statusOk;
 
-// renderizar cartão do usuário
+  // funcao botao registrar visita
+  async function handleRegistrarVisita() {
+    try {
+      await registrarVisita(user.id);
+
+      // envia evento global para o Dashboard atualizar o estado
+      const event = new CustomEvent("visita-registrada", {
+        detail: { id: user.id },
+      });
+      window.dispatchEvent(event);
+
+      alert("Visita registrada com sucesso!");
+    } catch (err) {
+      console.error(err);
+      alert("Erro ao registrar visita.");
+    }
+  }
+
+  // renderizar cartão do usuario
   return (
     <li className={styles.card}>
       <div className={styles.name}>{user.name}</div>
@@ -49,8 +68,11 @@ export const UserCard: React.FC<UserCardProps> = ({ user }) => {
       <div className={`${styles.status} ${statusClass}`}>
         {statusText}
       </div>
-
-      {/* TODO: botao de registrar visita */}
+      {user.active && (
+        <button className={styles.button} onClick={handleRegistrarVisita}>
+          Registrar Visita
+        </button>
+      )}
     </li>
   );
 };
