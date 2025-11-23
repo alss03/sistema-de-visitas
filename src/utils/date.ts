@@ -53,9 +53,37 @@ export function isVisitaPendente(lastVerified: string, frequencyInDays: number, 
     return next.getTime() < now.getTime();
 }
 
+// calcula quantos dias a visita esta em atraso
+// se nao venceu, retorna 0
+export function getDiasAtraso(
+  last_verified_date: string,
+  verify_frequency_in_days: number
+): number {
+  
+  // proxima visita esperada
+  const nextVisit = getDataProximaVisita(
+    last_verified_date,
+    verify_frequency_in_days
+  );
+
+  const hoje = new Date();
+
+  // calcula diferenca em milissegundos
+  const diffMs = hoje.getTime() - nextVisit.getTime();
+
+  // se nao venceu ainda, retorna 0
+  if (diffMs <= 0) {
+    return 0;
+  }
+
+  // converte milissegundos em dias
+  const MS_POR_DIA = 1000 * 60 * 60 * 24;
+  return Math.floor(diffMs / MS_POR_DIA);
+}
+
 // funcao para formatar objeto Date em string "dd/mm/yyyy hh:mm"
 export function formatDateTime(date: Date): string {
-    // formata a data conforme o padrão pt-BR
+    // formata a data conforme o padrao pt-BR
     return date.toLocaleString("pt-BR", {
     day: "2-digit",
     month: "2-digit",

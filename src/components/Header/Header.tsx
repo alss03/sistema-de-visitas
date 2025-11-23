@@ -9,7 +9,7 @@ export const Header: React.FC = () => {
       <div className={styles.inner}>
         {/* Lado esquerdo logo e nome do sistema */}
         <div className={styles.brand}>
-          <span className={styles.logo}>bx2</span>
+          <span className={styles.logo}>BX2</span>
           <span className={styles.product}>Sistema de Visitas</span>
         </div>
 

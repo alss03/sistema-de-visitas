@@ -1,7 +1,6 @@
-// criar variaveis para cores
 .card {
-  background: #FFFFFF;
-  border: 1px solid #D3E3E5;
+  background: #ffffff;
+  border: 1px solid #d3e3e5;
   border-radius: 8px;
   padding: 1rem;
   display: flex;
@@ -15,17 +14,58 @@
   }
 }
 
+// linha superior com nome e badge
+.headerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
 // nome do usuario
 .name {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #02758A;
+  color: #02758a;
+  flex: 1;
+  min-width: 0;
+}
+
+// badge de dias de atraso
+.badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.18rem 0.55rem;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+// severidades
+
+// low
+.badgeLow {  
+  background-color: #FFF4CC;
+  color: #946200;
+}
+
+// medium
+.badgeMedium {
+  background-color: #FFD28A;
+  color: #9A4A00;
+}
+
+// high
+.badgeHigh {
+  background-color: #F8C4C0;
+  color: #B41912;
 }
 
 // informacoes adicionais
 .info {
   font-size: 0.9rem;
-  color: #4A4A4A;
+  color: #4a4a4a;
 }
 
 // status da visita
@@ -37,17 +77,17 @@
 
 // visita pendente
 .statusPending {
-  color: #D9534F;
+  color: #d9534f;
 }
 
 // visita ok
 .statusOk {
-  color: #2A9D8F;
+  color: #2a9d8f;
 }
 
 // usuario inativo
 .statusInactive {
-  color: #8A8A8A;
+  color: #8a8a8a;
 }
 
 // botao de registrar visita
