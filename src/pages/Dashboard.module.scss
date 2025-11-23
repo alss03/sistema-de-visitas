@@ -126,6 +126,12 @@
   gap: 0.5rem;
 }
 
+.percentageAndProgress {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
 .progressTitleRow {
   display: flex;
   justify-content: space-between;
@@ -161,7 +167,7 @@
 // barra de progresso
 .progressBarWrapper {
   width: 100%;
-  height: 6px;
+  height: 12px;
   border-radius: 999px;
   background-color: #e6f5f7;
   overflow: hidden;

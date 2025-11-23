@@ -178,11 +178,6 @@ export const Dashboard: React.FC = () => {
   // renderiza lista de visitas
   return (
     <main className={styles.container}>
-      <h1 className={styles.title}>Sistema de Visitas</h1>
-      <p className={styles.subtitle}>
-        Total de usuários: {visitas.length}{" "}
-        {filtro !== "todas" && `• exibindo: ${visitasFiltradas.length}`}
-      </p>
 
       {/* toast de feedback */}
       {flashMessage && <div className={styles.toast}>{flashMessage}</div>}
@@ -242,19 +237,21 @@ export const Dashboard: React.FC = () => {
               </span>
             </div>
 
-            <div className={styles.progressHeader}>
-              <span className={styles.progressPercentBig}>
-                {percentualEmDia}%
-              </span>
-              <span className={styles.progressDescription}>
-              </span>
-            </div>
+            <div className={styles.percentageAndProgress}>
+              <div className={styles.progressHeader}>
+                <span className={styles.progressPercentBig}>
+                  {percentualEmDia}%
+                </span>
+                <span className={styles.progressDescription}>
+                </span>
+              </div>
 
-            <div className={styles.progressBarWrapper}>
-              <div
-                className={styles.progressBarFill}
-                style={{ width: `${percentualEmDia}%` }}
-              />
+              <div className={styles.progressBarWrapper}>
+                <div
+                  className={styles.progressBarFill}
+                  style={{ width: `${percentualEmDia}%` }}
+                />
+              </div>
             </div>
           </div>
 
