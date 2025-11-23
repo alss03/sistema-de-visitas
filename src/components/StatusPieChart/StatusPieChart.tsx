@@ -55,7 +55,7 @@ export const StatusPieChart: React.FC<StatusPieChartProps> = ({
   // renderiza grafico de pizza de status
   return (
     <section className={styles.card}>
-      <h2 className={styles.title}>Situação das pessoas</h2>
+      <h2 className={styles.title}>Status das pessoas</h2>
 
       {!hasData ? (
         <div className={styles.empty}>

@@ -11,7 +11,7 @@ import { StatusPieChart } from "../components/StatusPieChart/StatusPieChart";
 import { FrequencyBarChart } from "../components/FrequencyBarChart/FrequencyBarChart";
 
 // definir tipos de filtro
-type FiltroVisitas = "todas" | "pendentes" | "emdia" | "ativas" | "inativas";
+type FiltroVisitas = "todas" | "pendentes" | "ativas" | "inativas" | "emdia";
 
 // helper para agrupar frequências em faixas
 function agruparFrequencias(
@@ -27,7 +27,7 @@ function agruparFrequencias(
     "31+ dias": 0,
   };
 
-  // agrupar cada visita em um grupo
+// agrupar cada visita em um grupo
   visitas.forEach((v) => {
     const freq = v.verify_frequency_in_days;
 
@@ -76,7 +76,9 @@ export const Dashboard: React.FC = () => {
   // ouvir evento global de visita registrada (PATCH) e atualizar estado + toast
   useEffect(() => {
     const listener = (ev: Event) => {
-      const { id, lastVerified, name } = (ev as CustomEvent<VisitaRegistradaEvent>).detail;
+      const { id, lastVerified, name } = (
+        ev as CustomEvent<VisitaRegistradaEvent>
+      ).detail;
 
       // atualizar lista de visitas com nova data
       setVisitas((prev) =>
@@ -118,13 +120,18 @@ export const Dashboard: React.FC = () => {
   const total = visitas.length;
   const ativos = visitas.filter((v) => v.active).length;
   const inativos = visitas.filter((v) => !v.active).length;
+  // filtrar pendentes entre ativos
   const pendentes = visitas.filter(
-    (v) => v.active && isVisitaPendente(v.last_verified_date, v.verify_frequency_in_days)
+    (v) =>
+      v.active &&
+      isVisitaPendente(v.last_verified_date, v.verify_frequency_in_days)
   ).length;
+  // calcular em dia e percentual
   const emDia = Math.max(ativos - pendentes, 0);
-  const percentualEmDia = ativos === 0 ? 0 : Math.round((emDia / ativos) * 100);
+  const percentualEmDia =
+    ativos === 0 ? 0 : Math.round((emDia / ativos) * 100);
 
-  // dados para grafico de frequencia
+  // dados para grafico de frequencia por intervalo de dias
   const frequenciaData = agruparFrequencias(visitas);
 
   // aplicar filtro de status + busca
@@ -139,10 +146,8 @@ export const Dashboard: React.FC = () => {
       switch (filtro) {
         case "pendentes":
           return user.active && pendente;
-        case "emdia":
-          return user.active && !pendente;
         case "ativas":
-          return user.active;
+          return user.active && !pendente;
         case "inativas":
           return !user.active;
         case "todas":
@@ -151,28 +156,33 @@ export const Dashboard: React.FC = () => {
       }
     })
     .filter((user) => {
-      // aplicar busca por nome ou CPF
+      // aplica busca por nome ou CPF
       const termo = busca.trim();
       if (!termo) return true;
 
-      // arrumar o case-insensitive
+      // arruma o case-insensitive
       const termoLower = termo.toLowerCase();
       const nomeLower = user.name.toLowerCase();
 
-      // limpar CPF para comparar apenas numeros
+      // limpa CPF para comparar apenas numeros
       const cpfLimpo = user.cpf.replace(/\D/g, "");
       const termoCpf = termo.replace(/\D/g, "");
 
-      // verificar se nome ou CPF batem com o termo
+      // verifica se nome ou CPF batem com o termo
       return (
         nomeLower.includes(termoLower) ||
         (termoCpf.length > 0 && cpfLimpo.includes(termoCpf))
       );
     });
 
-  // renderizar lista de visitas
+  // renderiza lista de visitas
   return (
     <main className={styles.container}>
+      <h1 className={styles.title}>Sistema de Visitas</h1>
+      <p className={styles.subtitle}>
+        Total de usuários: {visitas.length}{" "}
+        {filtro !== "todas" && `• exibindo: ${visitasFiltradas.length}`}
+      </p>
 
       {/* toast de feedback */}
       {flashMessage && <div className={styles.toast}>{flashMessage}</div>}
@@ -189,40 +199,26 @@ export const Dashboard: React.FC = () => {
         onFilterChange={setFiltro}
       />
 
-      {/* linha com busca + barra de progresso */}
-      <section className={styles.searchAndProgressRow}>
-        <div className={styles.searchGroup}>
-          <label className={styles.searchLabel} htmlFor="search">
-            Buscar por nome ou CPF
-          </label>
-          <input
-            id="search"
-            type="text"
-            placeholder="Digite um nome ou CPF..."
-            value={busca}
-            onChange={(e) => setBusca(e.target.value)}
-            className={styles.searchInput}
-          />
-        </div>
-
-        {/* barra de progresso de visitas em dia */}
-        <div className={styles.progressGroup}>
-          <span className={styles.progressLabel}>Em dia entre os ativos</span>
-          <div className={styles.progressBarWrapper}>
-            <div
-              className={styles.progressBarFill}
-              style={{ width: `${percentualEmDia}%` }}
+      {/* area principal em 2 colunas */}
+      <section className={styles.content}>
+        {/* coluna esquerda: busca + cards */}
+        <div className={styles.leftColumn}>
+          {/* card de busca por nome/CPF */}
+          <div className={styles.searchCard}>
+            <label className={styles.searchLabel} htmlFor="search">
+              Buscar por nome ou CPF
+            </label>
+            <input
+              id="search"
+              type="text"
+              placeholder="Digite um nome ou CPF..."
+              value={busca}
+              onChange={(e) => setBusca(e.target.value)}
+              className={styles.searchInput}
             />
           </div>
-          <span className={styles.progressPercent}>{percentualEmDia}%</span>
-        </div>
-      </section>
 
-      {/* divisao de 2 colunas */}
-      <section className={styles.content}>
-        {/* coluna esquerda cards */}
-        <div className={styles.leftColumn}>
-          {/* estado vazio */}
+          {/* lista ou estado vazio */}
           {visitasFiltradas.length === 0 ? (
             <div className={styles.emptyState}>
               Nenhum usuário encontrado com os filtros e a busca atuais.
@@ -236,9 +232,38 @@ export const Dashboard: React.FC = () => {
           )}
         </div>
 
-        {/* coluna direita graficos */}
+        {/* coluna direita: progressBar + graficos */}
         <div className={styles.rightColumn}>
-          <StatusPieChart emDia={emDia} pendentes={pendentes} inativos={inativos} />
+          {/* card de porcentagem em dia */}
+          <div className={styles.progressCard}>
+            <div className={styles.progressTitleRow}>
+              <span className={styles.progressTitle}>
+                {emDia} de {ativos} ativos em dia
+              </span>
+            </div>
+
+            <div className={styles.progressHeader}>
+              <span className={styles.progressPercentBig}>
+                {percentualEmDia}%
+              </span>
+              <span className={styles.progressDescription}>
+              </span>
+            </div>
+
+            <div className={styles.progressBarWrapper}>
+              <div
+                className={styles.progressBarFill}
+                style={{ width: `${percentualEmDia}%` }}
+              />
+            </div>
+          </div>
+
+          {/* graficos */}
+          <StatusPieChart
+            emDia={emDia}
+            pendentes={pendentes}
+            inativos={inativos}
+          />
           <FrequencyBarChart data={frequenciaData} />
         </div>
       </section>

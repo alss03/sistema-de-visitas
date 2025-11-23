@@ -56,11 +56,13 @@
 
 // pendentes em vermelho
 .valuePending {
+  @extend .value;
   color: #d9534f;
 }
 
 // inativos em cinza
 .valueInactive {
+  @extend .value;
   color: #8a8a8a;
 }
 

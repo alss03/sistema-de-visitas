@@ -51,7 +51,7 @@ export const StatsBar: React.FC<StatsBarProps> = ({
         onClick={() => onFilterChange("pendentes")}
       >
         <span className={styles.label}>Pendentes (entre ativas)</span>
-        <span className={`${styles.value} styles.valuePending`}>
+        <span className={styles.valuePending}>
           {pendentes}
         </span>
       </button>
@@ -92,7 +92,7 @@ export const StatsBar: React.FC<StatsBarProps> = ({
         onClick={() => onFilterChange("inativas")}
       >
         <span className={styles.label}>Inativas</span>
-        <span className={`${styles.value} ${styles.valueInactive}`}>
+        <span className={styles.valueInactive}>
           {inativos}
         </span>
       </button>

@@ -110,12 +110,17 @@ export const UserCard: React.FC<UserCardProps> = ({ user }) => {
         )}
       </div>
 
-      <div className={styles.info}>CPF: {user.cpf}</div>
       <div className={styles.info}>
-        Última visita: {formatDateTime(lastVisit)}
+        <span className={styles.infoLabel}>CPF: </span>
+        <span>{user.cpf}</span>
+        </div>
+      <div className={styles.info}>
+        <span className={styles.infoLabel}>Última visita: </span>
+        <span>{formatDateTime(lastVisit)}</span>
       </div>
       <div className={styles.info}>
-        Próxima visita: {formatDateTime(nextVisit)}
+        <span className={styles.infoLabel}>Próxima visita: </span>
+        <span>{formatDateTime(nextVisit)}</span>
       </div>
       <div className={`${styles.status} ${statusClass}`}>{statusText}</div>
 
