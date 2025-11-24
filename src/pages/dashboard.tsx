@@ -6,6 +6,7 @@ import { StatsBar } from "../components/StatsBar/StatsBar";
 import { StatusPieChart } from "../components/StatusPieChart/StatusPieChart";
 import { FrequencyBarChart } from "../components/FrequencyBarChart/FrequencyBarChart";
 import { useVisitasDashboard } from "../hooks/useVisitasDashboard";
+import Spinner  from "../components/Spinner/Spinner";
 
 export const Dashboard: React.FC = () => {
   console.log("=Dashboard exibido");
@@ -24,7 +25,7 @@ export const Dashboard: React.FC = () => {
   } = useVisitasDashboard();
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Spinner />;
   }
 
   if (error) {

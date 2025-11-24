@@ -1,0 +1,26 @@
+.loader {
+  width: 100px;
+  height: 100px;
+  border: 10px solid rgba(0, 0, 0, 0.1);
+  border-top-color: #02495a;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: block;
+  margin: 20px auto;
+}
+
+// centralizar spinner na tela
+.wrapper {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
