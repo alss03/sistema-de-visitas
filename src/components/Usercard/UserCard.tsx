@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import type { PessoasParaVisitar } from "../../types/visitas";
 import {
   parseDataVisita,
   getDataProximaVisita,
   isVisitaPendente,
+  isVencendoHoje,
   formatDateTime,
   getDiasAtraso,
+  getDiasParaVencer,
 } from "../../utils/date";
 import { registrarVisita } from "../../api/visitas.service";
 import styles from "./UserCard.module.scss";
@@ -19,23 +21,45 @@ interface UserCardProps {
 export const UserCard: React.FC<UserCardProps> = ({ user }) => {
   console.log("=UserCard renderizado para:", user.id, user.name);
 
+  // estado para evitar double click no botao
+  const [isSaving, setIsSaving] = useState(false);
+
   // converte ultima data de visita
   const lastVisit = parseDataVisita(user.last_verified_date);
+
   // calcula próxima data de visita
   const nextVisit = getDataProximaVisita(
     user.last_verified_date,
     user.verify_frequency_in_days
   );
+
   // verifica se a visita esta pendente
   const pending = isVisitaPendente(
     user.last_verified_date,
     user.verify_frequency_in_days
   );
 
-  // dias de atraso (se estiver pendente e ativo)
+  // verifica se vence hoje (mesmo dia e ainda nao pendente)
+  const venceHoje =
+    !pending &&
+    isVencendoHoje(
+      user.last_verified_date,
+      user.verify_frequency_in_days
+    );
+
+  // dias de atraso (somente se estiver pendente e ativo)
   const diasAtraso =
     pending && user.active
       ? getDiasAtraso(
+          user.last_verified_date,
+          user.verify_frequency_in_days
+        )
+      : 0;
+
+  // dias para vencer (somente se estiver em dia, ativo e não vencer hoje)
+  const diasParaVencer =
+    user.active && !pending && !venceHoje
+      ? getDiasParaVencer(
           user.last_verified_date,
           user.verify_frequency_in_days
         )
@@ -55,31 +79,44 @@ export const UserCard: React.FC<UserCardProps> = ({ user }) => {
     ? styles.statusPending
     : styles.statusOk;
 
-  // severidade visual para o badge de atraso
+  // badge (texto + severidade)
   let badgeSeverityClass = "";
-  if (pending && user.active) {
-    if (diasAtraso <= 0) {
-      // vence hoje
+  let badgeText = "";
+
+  if (user.active) {
+    if (pending) {
+      // atrasado
+      if (diasAtraso <= 3) {
+        badgeSeverityClass = styles.badgeMedium;
+      } else {
+        badgeSeverityClass = styles.badgeHigh;
+      }
+
+      badgeText =
+        diasAtraso === 1
+          ? "1 dia em atraso"
+          : `${diasAtraso} dias em atraso`;
+    } else if (venceHoje) {
+      // vence hoje (nao atrasado ainda)
       badgeSeverityClass = styles.badgeLow;
-    } else if (diasAtraso <= 3) {
-      // pouco atraso
-      badgeSeverityClass = styles.badgeMedium;
-    } else {
-      // muito atraso
-      badgeSeverityClass = styles.badgeHigh;
+      badgeText = "Vence hoje";
+    } else if (diasParaVencer > 0) {
+      // em dia – badge verde com dias restantes
+      badgeSeverityClass = styles.badgeSafe; // classe que você já criou
+      badgeText =
+        diasParaVencer === 1
+          ? "Vence em 1 dia"
+          : `Vence em ${diasParaVencer} dias`;
     }
   }
 
-  // texto do badge
-  const badgeText =
-    !pending || !user.active
-      ? ""
-      : diasAtraso <= 0
-      ? "Vence hoje"
-      : `${diasAtraso} dia${diasAtraso > 1 ? "s" : ""} em atraso`;
-
   // funcao botao registrar visita
   async function handleRegistrarVisita() {
+    // evita double click / chamadas repetidas
+    if (isSaving) return;
+
+    setIsSaving(true);
+
     try {
       const newLastVerified = await registrarVisita(user.id);
 
@@ -93,17 +130,19 @@ export const UserCard: React.FC<UserCardProps> = ({ user }) => {
     } catch (err) {
       console.error(err);
       alert("Erro ao registrar visita.");
+    } finally {
+      setIsSaving(false);
     }
   }
 
   // renderizar cartao do usuario
   return (
     <li className={styles.card}>
-      {/* header com nome + badge de atraso */}
+      {/* header com nome + badge de atraso/em dia */}
       <div className={styles.headerRow}>
         <div className={styles.name}>{user.name}</div>
 
-        {pending && user.active && (
+        {badgeText && (
           <span className={`${styles.badge} ${badgeSeverityClass}`}>
             {badgeText}
           </span>
@@ -113,20 +152,27 @@ export const UserCard: React.FC<UserCardProps> = ({ user }) => {
       <div className={styles.info}>
         <span className={styles.infoLabel}>CPF: </span>
         <span>{user.cpf}</span>
-        </div>
+      </div>
+
       <div className={styles.info}>
         <span className={styles.infoLabel}>Última visita: </span>
         <span>{formatDateTime(lastVisit)}</span>
       </div>
+
       <div className={styles.info}>
         <span className={styles.infoLabel}>Próxima visita: </span>
         <span>{formatDateTime(nextVisit)}</span>
       </div>
+
       <div className={`${styles.status} ${statusClass}`}>{statusText}</div>
 
       {user.active && (
-        <button className={styles.button} onClick={handleRegistrarVisita}>
-          Registrar Visita
+        <button
+          className={styles.button}
+          onClick={handleRegistrarVisita}
+          disabled={isSaving}
+        >
+          {isSaving ? "Registrando..." : "Registrar Visita"}
         </button>
       )}
     </li>

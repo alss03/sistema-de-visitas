@@ -45,6 +45,12 @@
 
 // severidades
 
+// safe
+.badgeSafe {
+  background-color: #e6f6ec;
+  color: #1b5e20;
+}
+
 // low
 .badgeLow {  
   background-color: #FFF4CC;
@@ -113,4 +119,11 @@
   &:hover {
     background-color: #006c85;
   }
+}
+
+// estilo do botao desabilitado
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
 }

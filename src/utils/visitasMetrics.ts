@@ -62,6 +62,7 @@ export function agruparFrequencias(
   visitas.forEach((v) => {
     const freq = v.verify_frequency_in_days;
 
+    // incrementa o grupo correspondente
     if (freq >= 1 && freq <= 3) grupos["1-3 dias"]++;
     else if (freq >= 4 && freq <= 7) grupos["4-7 dias"]++;
     else if (freq >= 8 && freq <= 14) grupos["8-14 dias"]++;

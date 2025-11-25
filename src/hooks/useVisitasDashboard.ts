@@ -28,6 +28,7 @@ interface UseVisitasDashboardResult {
   flashMessage: string | null;
   resumo: ResumoVisitas;
   frequenciaData: FrequenciaIntervalo[];
+  reload: () => void;
 }
 
 // hook para gerenciar estado do dashboard de visitas
@@ -39,18 +40,27 @@ export function useVisitasDashboard(): UseVisitasDashboardResult {
   const [flashMessage, setFlashMessage] = useState<string | null>(null);
   const [busca, setBusca] = useState<string>("");
 
+  // função reutilizável para carregar as visitas (inicial + retry)
+  async function load() {
+    setLoading(true);      // mostra loading no retry
+    setError(null);        // limpa erro anterior
+
+    try {
+      const result = await getVisitas();
+      setVisitas(result);
+    } catch (err) {
+      console.error(err);
+      setVisitas([]);      // garante que não fica lixo
+      setError(
+        "Não foi possível conectar ao servidor. Verifique sua conexão e tente novamente."
+      );
+    } finally {
+      setLoading(false);
+    }
+  }
+
   // carregar dados ao montar
   useEffect(() => {
-    async function load() {
-      try {
-        const result = await getVisitas();
-        setVisitas(result);
-      } catch (err) {
-        setError((err as Error).message);
-      } finally {
-        setLoading(false);
-      }
-    }
     load();
   }, []);
 
@@ -171,5 +181,6 @@ export function useVisitasDashboard(): UseVisitasDashboardResult {
     flashMessage,
     resumo,
     frequenciaData,
+    reload: load,
   };
 }

@@ -7,6 +7,7 @@ import { StatusPieChart } from "../components/StatusPieChart/StatusPieChart";
 import { FrequencyBarChart } from "../components/FrequencyBarChart/FrequencyBarChart";
 import { useVisitasDashboard } from "../hooks/useVisitasDashboard";
 import Spinner  from "../components/Spinner/Spinner";
+import { ErrorMessage } from "../components/ErrorMessage/ErrorMessage";
 
 export const Dashboard: React.FC = () => {
   console.log("=Dashboard exibido");
@@ -22,6 +23,7 @@ export const Dashboard: React.FC = () => {
     setFiltro,
     busca,
     setBusca,
+    reload,
   } = useVisitasDashboard();
 
   if (loading) {
@@ -29,7 +31,11 @@ export const Dashboard: React.FC = () => {
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return (
+      <main>
+        <ErrorMessage message={error} onRetry={reload} />
+      </main>
+    );
   }
 
   const { total, ativos, inativos, pendentes, emDia, percentualEmDia } = resumo;

@@ -1,0 +1,34 @@
+
+// container da mensagem de erro
+.errorBox {
+  background: #ffe9e9;
+  border: 1px solid #ffb3b3;
+  padding: 16px;
+  border-radius: 8px;
+  color: #b60000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+// do ícone de erro
+.icon {
+  font-size: 22px;
+}
+
+// botao de retry
+.retryBtn {
+  background: #b60000;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+// hover do botão de retry
+.retryBtn:hover {
+  opacity: 0.8;
+}
