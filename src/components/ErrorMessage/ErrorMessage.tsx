@@ -11,7 +11,7 @@ export function ErrorMessage({
   onRetry?: () => void;
 }) {
   return (
-    <div className={styles.errorBox}>
+    <div className={styles.errorContainer}>
       {/* icone de alerta */}
       <FiAlertTriangle className={styles.icon} />
       <p>{message}</p>

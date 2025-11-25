@@ -40,17 +40,17 @@ export function useVisitasDashboard(): UseVisitasDashboardResult {
   const [flashMessage, setFlashMessage] = useState<string | null>(null);
   const [busca, setBusca] = useState<string>("");
 
-  // função reutilizável para carregar as visitas (inicial + retry)
+  // funcao para carregar as visitas
   async function load() {
-    setLoading(true);      // mostra loading no retry
-    setError(null);        // limpa erro anterior
+    setLoading(true);
+    setError(null);
 
     try {
       const result = await getVisitas();
       setVisitas(result);
     } catch (err) {
       console.error(err);
-      setVisitas([]);      // garante que não fica lixo
+      setVisitas([]);
       setError(
         "Não foi possível conectar ao servidor. Verifique sua conexão e tente novamente."
       );
@@ -74,7 +74,7 @@ export function useVisitasDashboard(): UseVisitasDashboardResult {
         ev as CustomEvent<VisitaRegistradaEvent>
       ).detail;
 
-      //
+      // 
       setVisitas((prev) =>
         prev.map((p) =>
           p.id === id ? { ...p, last_verified_date: lastVerified } : p
@@ -140,15 +140,18 @@ export function useVisitasDashboard(): UseVisitasDashboardResult {
               // apenas ativos e em dia
               return user.active && !pendente;
             case "ativas":
-              // todas ativas (em dia + pendentes)
+              // todas as ativas
               return user.active;
+              // todas as inativas
             case "inativas":
               return !user.active;
+              // todas ativas ou inativas
             case "todas":
             default:
               return true;
           }
         })
+        // comentar melhor sessao abaixo
         .filter((user) => {
           const termo = busca.trim();
           if (!termo) return true;
