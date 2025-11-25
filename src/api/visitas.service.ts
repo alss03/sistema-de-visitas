@@ -1,7 +1,7 @@
 import type { PessoasParaVisitar } from "../types/visitas";
 
 // URL base da API
-const BASE_URL = "https://tatico.spocws.icu/teste/followups_f8d";
+const BASE_URL = "https://tatico.spocws.icu/teste/followups_f38d";
 
 // Formata data atual no padrao da API
 function formatNowForApi(): string {

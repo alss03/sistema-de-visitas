@@ -118,7 +118,12 @@ export const Dashboard: React.FC = () => {
           </div>
 
           {/* graficos */}
-          <StatusPieChart emDia={emDia} pendentes={pendentes} inativos={inativos} />
+          <StatusPieChart 
+            emDiaSeguro={resumo.emDiaSeguro}
+            venceHoje={resumo.venceHoje}
+            atrasoLeve={resumo.atrasoLeve}
+            atrasoGrave={resumo.atrasoGrave}
+            inativos={resumo.inativos} />
           <FrequencyBarChart data={frequenciaData} />
         </div>
       </section>

@@ -12,41 +12,58 @@ import styles from "./StatusPieChart.module.scss";
 
 // props do componente StatusPieChart
 interface StatusPieChartProps {
-  emDia: number;
-  pendentes: number;
-  inativos: number;
+  emDiaSeguro: number;
+  venceHoje: number;
+  atrasoLeve: number;
+  atrasoGrave: number;
+  inativos: number; 
 }
 
 // componente StatusPieChart
 export const StatusPieChart: React.FC<StatusPieChartProps> = ({
-  emDia,
-  pendentes,
+  emDiaSeguro,
+  venceHoje,
+  atrasoLeve,
+  atrasoGrave,
   inativos,
 }) => {
+
   // prepara dados para o grafico de pizza
   const data = [
     {
-      name: "Ativos em dia",
-      value: emDia,
-      key: "emDia",
+      name: "Em dia",
+      value: emDiaSeguro,
+      key: "emDiaSeguro",
     },
     {
-      name: "Pendentes",
-      value: pendentes,
-      key: "pendentes",
+      name: "Vence hoje",
+      value: venceHoje,
+      key: "venceHoje",
+    },
+    {
+      name: "Até 3 dias",
+      value: atrasoLeve,
+      key: "atrasoLeve",
+    },
+    {
+      name: "Mais de 3 dias",
+      value: atrasoGrave,
+      key: "atrasoGrave",
     },
     {
       name: "Inativos",
       value: inativos,
       key: "inativos",
     },
-  ].filter((item) => item.value > 0); // remove fatias vazias
+  ].filter((item) => item.value > 0); // remove vazios
 
   // cores para cada status
-  const COLORS: Record<string, string> = {
-    emDia: "#2A9D8F", // ok
-    pendentes: "#D9534F", // pendente
-    inativos: "#8A8A8A", // inativo
+  const CORES: Record<string, string> = {
+    emDiaSeguro: "#2A9D8F",
+    venceHoje: "#F4A261",
+    atrasoLeve: "#E9C46A",
+    atrasoGrave: "#D9534F",
+    inativos: "#8A8A8A",
   };
 
   // verifica se ha dados para exibir
@@ -55,7 +72,7 @@ export const StatusPieChart: React.FC<StatusPieChartProps> = ({
   // renderiza grafico de pizza de status
   return (
     <section className={styles.card}>
-      <h2 className={styles.title}>Status das pessoas</h2>
+      <h2 className={styles.title}>Status de atraso das pessoas</h2>
 
       {!hasData ? (
         <div className={styles.empty}>
@@ -82,7 +99,7 @@ export const StatusPieChart: React.FC<StatusPieChartProps> = ({
                 {data.map((entry) => (
                   <Cell
                     key={entry.key}
-                    fill={COLORS[entry.key]}
+                    fill={CORES[entry.key]}
                     stroke="#FFFFFF"
                     strokeWidth={1}
                   />
