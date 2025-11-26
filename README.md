@@ -2,7 +2,7 @@
 # Dashboard de Visitas
 
 Este projeto é um painel para gerenciamento e acompanhamento de visitas periódicas. Ele permite visualizar pessoas que precisam ser visitadas, identificar atrasos, organizar prioridades e registrar visitas em tempo real.  
-Foi desenvolvido utilizando React, Vite e TypeScript, com foco em clareza, desempenho e arquitetura bem estruturada.
+Foi desenvolvido utilizando React, Vite e TypeScript, com foco em clareza, desempenho e arquitetura bem estruturada. Ao final do documento estão as instruçõoes para instalar dependências e rodar o código.
 
 ----------
 
@@ -289,3 +289,12 @@ Incluem:
 -   Emissão do evento de atualização
 
 #### Não foi possível cobrir toda a aplicação com testes devido ao limite de tempo do desafio.
+
+## Para instalar as dependências
+``npm install``
+
+## Para rodar a aplicação
+``npm run dev``
+
+## Para rodar os testes
+``npm test -- --reporter=verbose``
