@@ -62,7 +62,7 @@ export async function getVisitas(): Promise<PessoasParaVisitar[]> {
   // extrai os dados
   const data = (await response.json()) as PessoasParaVisitar[];
 
-  console.log("GET /visitas → sucesso:", data);
+  console.log("GET /visitas sucesso:", data);
   return data;
 }
 

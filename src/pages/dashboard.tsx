@@ -1,4 +1,3 @@
-// src/pages/Dashboard.tsx
 import React from "react";
 import { UserCard } from "../components/UserCard/UserCard";
 import styles from "./Dashboard.module.scss";
@@ -10,8 +9,6 @@ import Spinner from "../components/Spinner/Spinner";
 import { ErrorMessage } from "../components/ErrorMessage/ErrorMessage";
 
 export const Dashboard: React.FC = () => {
-  console.log("=Dashboard exibido");
-
   const {
     loading,
     error,

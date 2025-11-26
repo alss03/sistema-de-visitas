@@ -19,8 +19,6 @@ interface UserCardProps {
 
 // componente UserCard
 export const UserCard: React.FC<UserCardProps> = ({ user }) => {
-  console.log("=UserCard renderizado para:", user.id, user.name);
-
   // estado para evitar double click no botao
   const [isSaving, setIsSaving] = useState(false);
 
@@ -125,8 +123,6 @@ export const UserCard: React.FC<UserCardProps> = ({ user }) => {
         detail: { id: user.id, lastVerified: newLastVerified, name: user.name },
       });
       window.dispatchEvent(event);
-
-      console.log("Visita registrada com sucesso!");
     } catch (err) {
       console.error(err);
       alert("Erro ao registrar visita.");
