@@ -6,7 +6,7 @@ import { StatsBar } from "../components/StatsBar/StatsBar";
 import { StatusPieChart } from "../components/StatusPieChart/StatusPieChart";
 import { FrequencyBarChart } from "../components/FrequencyBarChart/FrequencyBarChart";
 import { useVisitasDashboard } from "../hooks/useVisitasDashboard";
-import Spinner  from "../components/Spinner/Spinner";
+import Spinner from "../components/Spinner/Spinner";
 import { ErrorMessage } from "../components/ErrorMessage/ErrorMessage";
 
 export const Dashboard: React.FC = () => {
@@ -24,6 +24,8 @@ export const Dashboard: React.FC = () => {
     busca,
     setBusca,
     reload,
+    modoOrdenacao,
+    setModoOrdenacao,
   } = useVisitasDashboard();
 
   if (loading) {
@@ -38,7 +40,8 @@ export const Dashboard: React.FC = () => {
     );
   }
 
-  const { total, ativos, inativos, pendentes, emDia, percentualEmDia } = resumo;
+  const { total, ativos, inativos, pendentes, emDia, percentualEmDia } =
+    resumo;
 
   return (
     <main className={styles.container}>
@@ -61,19 +64,43 @@ export const Dashboard: React.FC = () => {
       <section className={styles.content}>
         {/* coluna esquerda: busca + cards */}
         <div className={styles.leftColumn}>
-          {/* card de busca por nome/CPF */}
-          <div className={styles.searchCard}>
-            <label className={styles.searchLabel} htmlFor="search">
-              Buscar por nome ou CPF
-            </label>
-            <input
-              id="search"
-              type="text"
-              placeholder="Digite um nome ou CPF..."
-              value={busca}
-              onChange={(e) => setBusca(e.target.value)}
-              className={styles.searchInput}
-            />
+          {/* linha com busca + modo de visualizacao */}
+          <div className={styles.searchRow}>
+            {/* card de busca por nome/CPF */}
+            <div className={styles.searchCard}>
+              <label className={styles.searchLabel} htmlFor="search">
+                Buscar por nome ou CPF
+              </label>
+              <input
+                id="search"
+                type="text"
+                placeholder="Digite um nome ou CPF..."
+                value={busca}
+                onChange={(e) => setBusca(e.target.value)}
+                className={styles.searchInput}
+              />
+            </div>
+
+            {/* seletor de visualizacao/ordenacao */}
+            <div className={styles.viewModeCard}>
+              <label className={styles.searchLabel} htmlFor="viewMode">
+                Visualização
+              </label>
+              <select
+                id="viewMode"
+                value={modoOrdenacao}
+                onChange={(e) =>
+                  setModoOrdenacao(
+                    e.target.value as "urgencia" | "alfabetica" | "recentes"
+                  )
+                }
+                className={styles.viewModeSelect}
+              >
+                <option value="urgencia">Por urgência</option>
+                <option value="alfabetica">Ordem alfabética</option>
+                <option value="recentes">Visitas mais recentes</option>
+              </select>
+            </div>
           </div>
 
           {/* lista ou estado vazio */}
@@ -118,12 +145,13 @@ export const Dashboard: React.FC = () => {
           </div>
 
           {/* graficos */}
-          <StatusPieChart 
+          <StatusPieChart
             emDiaSeguro={resumo.emDiaSeguro}
             venceHoje={resumo.venceHoje}
             atrasoLeve={resumo.atrasoLeve}
             atrasoGrave={resumo.atrasoGrave}
-            inativos={resumo.inativos} />
+            inativos={resumo.inativos}
+          />
           <FrequencyBarChart data={frequenciaData} />
         </div>
       </section>

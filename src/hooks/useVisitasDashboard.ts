@@ -12,7 +12,15 @@ import {
 } from "../utils/visitasMetrics";
 
 // definir tipos de filtro
-export type FiltroVisitas = "todas" | "pendentes" | "ativas" | "inativas" | "emdia";
+export type FiltroVisitas =
+  | "todas"
+  | "pendentes"
+  | "ativas"
+  | "inativas"
+  | "emdia";
+
+// modo de ordenacao
+export type ModoOrdenacao = "urgencia" | "alfabetica" | "recentes";
 
 // definir tipo de retorno do hook
 interface UseVisitasDashboardResult {
@@ -29,6 +37,10 @@ interface UseVisitasDashboardResult {
   resumo: ResumoVisitas;
   frequenciaData: FrequenciaIntervalo[];
   reload: () => void;
+
+  // estado exposto
+  modoOrdenacao: ModoOrdenacao;
+  setModoOrdenacao: (modo: ModoOrdenacao) => void;
 }
 
 // hook para gerenciar estado do dashboard de visitas
@@ -39,6 +51,10 @@ export function useVisitasDashboard(): UseVisitasDashboardResult {
   const [filtro, setFiltro] = useState<FiltroVisitas>("todas");
   const [flashMessage, setFlashMessage] = useState<string | null>(null);
   const [busca, setBusca] = useState<string>("");
+
+  // modo de ordenacao (padrao: urgencia)
+  const [modoOrdenacao, setModoOrdenacao] =
+    useState<ModoOrdenacao>("urgencia");
 
   // funcao para carregar as visitas
   async function load() {
@@ -74,7 +90,6 @@ export function useVisitasDashboard(): UseVisitasDashboardResult {
         ev as CustomEvent<VisitaRegistradaEvent>
       ).detail;
 
-      // 
       setVisitas((prev) =>
         prev.map((p) =>
           p.id === id ? { ...p, last_verified_date: lastVerified } : p
@@ -84,7 +99,7 @@ export function useVisitasDashboard(): UseVisitasDashboardResult {
       // exibir mensagem de feedback
       setFlashMessage(`Visita registrada para ${name}`);
 
-      // limpa eventual timeout anterior e agenda o novo
+      // limpa timeout anterior e agenda o novo
       if (timeoutId) {
         window.clearTimeout(timeoutId);
       }
@@ -105,11 +120,29 @@ export function useVisitasDashboard(): UseVisitasDashboardResult {
     };
   }, []);
 
-  // memorizar dados derivados
-  const visitasOrdenadas = useMemo(
-    () => ordenarVisitas(visitas),
-    [visitas]
-  );
+
+  // visitasOrdenadas de acordo com o mnodo de ordenacao
+  const visitasOrdenadas = useMemo(() => {
+    const base = [...visitas];
+
+    switch (modoOrdenacao) {
+      case "alfabetica":
+        return base.sort((a, b) =>
+          a.name.localeCompare(b.name, "pt-BR", { sensitivity: "base" })
+        );
+
+      case "recentes":
+        return base.sort((a, b) => {
+          const da = new Date(a.last_verified_date).getTime();
+          const db = new Date(b.last_verified_date).getTime();
+          return db - da; // mais recente primeiro
+        });
+
+      case "urgencia":
+      default:
+        return ordenarVisitas(base);
+    }
+  }, [visitas, modoOrdenacao]);
 
   // resumo das visitas
   const resumo = useMemo(
@@ -142,16 +175,15 @@ export function useVisitasDashboard(): UseVisitasDashboardResult {
             case "ativas":
               // todas as ativas
               return user.active;
-              // todas as inativas
             case "inativas":
+              // todas as inativas
               return !user.active;
-              // todas ativas ou inativas
             case "todas":
             default:
+              // todas ativas ou inativas
               return true;
           }
         })
-        // comentar melhor sessao abaixo
         .filter((user) => {
           const termo = busca.trim();
           if (!termo) return true;
@@ -185,5 +217,7 @@ export function useVisitasDashboard(): UseVisitasDashboardResult {
     resumo,
     frequenciaData,
     reload: load,
+    modoOrdenacao,
+    setModoOrdenacao,
   };
 }

@@ -79,7 +79,7 @@
   gap: 1rem;
 }
 
-/* card de busca */
+// card de busca
 .searchCard {
   background: #ffffff;
   border: 1px solid #d3e3e5;
@@ -88,7 +88,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
-  margin-bottom: 0.5rem;
+  flex: 1 1 70%;
 }
 
 // label da busca
@@ -100,7 +100,7 @@
 // input de busca
 .searchInput {
   padding: 0.45rem 0.75rem;
-  border-radius: 999px;
+  border-radius: 16px;
   border: 1px solid #d3e3e5;
   font-size: 0.9rem;
   outline: none;
@@ -115,7 +115,56 @@
   }
 }
 
-/* card de progresso "em dia" */
+.searchRow {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-end;
+}
+
+.viewModeCard {
+  background: #ffffff;
+  border: 1px solid #d3e3e5;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  flex: 1 1 30%;
+}
+
+.viewModeSelect {
+  width: 100%;
+  padding: 0.45rem 0.75rem;
+  padding-right: 2.4rem;
+  border-radius: 16px;
+  border: 1px solid #d3e3e5;
+  font-size: 0.9rem;
+  background-color: #ffffff;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease,
+    background-color 0.15s ease;
+
+  // removendo seta padrao por causa do hover
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  // adicionando svg de seta
+  background-image: url("/src/assets/chevron-down.svg");
+  background-repeat: no-repeat;
+  background-position: right 0.9rem center;
+  background-size: 20px;
+}
+
+// adicionando focus
+.viewModeSelect:focus {
+  border-color: #038c9e;
+  box-shadow: 0 0 0 2px rgba(3, 140, 158, 0.2);
+  background-color: #ffffff;
+}
+
+// card de progresso "em dia"
 .progressCard {
   background: #ffffff;
   border: 1px solid #d3e3e5;
@@ -175,7 +224,7 @@
 
 .progressBarFill {
   height: 100%;
-  border-radius: 999px;
+  border-radius: 16px;
   background-color: #2a9d8f;
   transition: width 0.3s ease;
 }
@@ -211,6 +260,6 @@
 
   .rightColumn {
     margin-top: 0.75rem;
-    order: -1; // graficos + progresso acima da lista em telas menores (opcional)
+    order: -1; // ordenacao para telas menores
   }
 }
