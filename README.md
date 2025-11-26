@@ -1,259 +1,291 @@
-Dashboard de Visitas — Documentação do Projeto
 
-Este projeto é um painel para gerenciamento de visitas, desenvolvido com React, Vite e TypeScript. Ele permite visualizar usuários, seus status de visita, métricas gerais e gráficos, além de registrar novas visitas com atualização em tempo real.
-O objetivo é fornecer uma interface clara, rápida e funcional para organizações que acompanham rotinas de verificação, inspeção ou atendimento periódico.
+# Dashboard de Visitas
 
-1. Tecnologias Utilizadas
+Este projeto é um painel para gerenciamento e acompanhamento de visitas periódicas. Ele permite visualizar pessoas que precisam ser visitadas, identificar atrasos, organizar prioridades e registrar visitas em tempo real.  
+Foi desenvolvido utilizando React, Vite e TypeScript, com foco em clareza, desempenho e arquitetura bem estruturada.
 
-React + TypeScript
+----------
 
-Vite como bundler
+## 1. Tecnologias Utilizadas
 
-SCSS Modules para estilização
+-   **React + TypeScript**
+    
+-   **Vite** para desenvolvimento e build
+    
+-   **SCSS Modules** para estilização
+    
+-   **Recharts** para visualização de dados
+    
+-   **Vitest + Testing Library** para testes unitários
+    
+-   **Arquitetura baseada em hooks** para divisão clara entre lógica e apresentação
+    
 
-Recharts para visualização de dados
+----------
 
-Vitest + Testing Library para testes unitários
+## 2. Estrutura Geral do Projeto
 
-Arquitetura baseada em hooks, buscando separar lógica e apresentação
-
-2. Estrutura Geral do Projeto
-src/
+```src/
   api/
-    visitas.service.ts         -> comunicação com backend (GET e registrar visita)
+    visitas.service.ts
   components/
-    UserCard/                  -> cartão individual com status e ações
-    StatsBar/                  -> barra com métricas e filtros principais
-    StatusPieChart/            -> gráfico de pizza dos status
-    FrequencyBarChart/         -> gráfico de barras por frequência
-    Spinner/
+    UserCard/
+    StatsBar/
+    StatusPieChart/
+    FrequencyBarChart/
     ErrorMessage/
+    Spinner/
   hooks/
-    useVisitasDashboard.ts     -> lógica central do dashboard
-  utils/
-    date.ts                    -> funções de data e cálculos de status
-    visitasMetrics.ts          -> resumo e agrupamento dos dados
-    sort.ts                    -> ordenação de visitas
+    useVisitasDashboard.ts
+  utils/ date.ts
+    visitasMetrics.ts sort.ts
   pages/
-    Dashboard.tsx              -> página principal do sistema
-tests/
-  date.test.ts
-  visitasMetrics.test.ts
-  sort.test.ts
+    Dashboard.tsx
+tests/ date.test.ts
+  visitasMetrics.test.ts sort.test.ts
   UserCard.test.tsx
+```
 
+Cada parte é separada por responsabilidade, como solicitado no desafio.
 
-A estrutura prioriza organização, escalabilidade e facilidade de manutenção. Cada responsabilidade está isolada no lugar correto.
+----------
 
-3. Funcionalidades Implementadas
-3.1. Listagem de Usuários
+## 3. Funcionalidades Implementadas
 
-Cada usuário contém:
+### 3.1 Listagem de Usuários
 
-nome
+Cada usuário exibe:
 
-CPF
+-   Nome
+    
+-   CPF
+    
+-   Última visita
+    
+-   Próxima visita
+    
+-   Status (ativo / inativo)
+    
+-   Badge indicando urgência:
+    
+    -   Em dia
+        
+    -   Vence hoje
+        
+    -   Atraso leve (≤ 3 dias)
+        
+    -   Atraso grave (> 3 dias)
+        
 
-última visita registrada
+As regras dessas badges são baseadas nas funções de `date.ts`.
 
-próxima visita calculada
+----------
 
-status como ativo ou inativo
+### 3.2 Registro de Visita
 
-badge informativo indicando o nível de urgência (em dia, vence hoje, atraso leve ou atraso grave)
+-   Botão "Registrar Visita" dispara uma chamada API.
+    
+-   Recebe nova data de verificação.
+    
+-   Dispara um evento global `visita-registrada`.
+    
+-   O hook `useVisitasDashboard` escuta esse evento e atualiza o estado automaticamente.
+    
+-   Um alerta temporário informa o sucesso da ação.
+    
 
-A lógica do badge depende diretamente das funções em date.ts e dos cálculos de dias de atraso e dias para vencer.
+Esse modelo permite atualização instantânea da UI sem necessidade de recarregar toda a lista.
 
-3.2. Registro de Visita
+----------
 
-O botão “Registrar Visita”:
+### 3.3 Busca por Nome ou CPF
 
-chama a função registrarVisita na API,
+A busca é aplicada em tempo real e aceita:
 
-recebe uma nova data de verificação,
+-   Nome (sem distinção de acentos ou maiúsculas)
+    
+-   CPF com ou sem máscara
+    
 
-dispara um evento global visita-registrada,
+Funciona em conjunto com os filtros e com o modo de ordenação.
 
-o hook useVisitasDashboard escuta esse evento e atualiza o estado global,
+----------
 
-exibe um alerta temporário informando o sucesso.
+### 3.4 Filtros Principais
 
-Esse fluxo mantém a aplicação coerente sem necessidade de refetch completo.
+O usuário pode filtrar por:
 
-3.3. Busca por Nome ou CPF
+-   Todas
+    
+-   Pendentes
+    
+-   Em dia
+    
+-   Ativas
+    
+-   Inativas
+    
 
-A busca é aplicada em tempo real, filtrando por:
+Esses filtros são calculados no hook principal.
 
-nome (case insensitive)
+----------
 
-CPF (com ou sem máscara)
+### 3.5 Modos de Ordenação
 
-O filtro é acumulativo com o filtro principal e com a ordenação.
+Três modos foram implementados:
 
-3.4. Filtros Principais
+-   **Urgência**: pendentes vêm primeiro, depois em dia, depois inativos
+    
+-   **Alfabética**: ordenação alfabética
+    
+-   **Mais recentes**: última visita mais recente primeiro
+    
 
-O usuário pode alternar entre:
+O seletor de visualização fica ao lado da barra de busca.
 
-todas
+----------
 
-pendentes
+### 3.6 Métricas Operacionais
 
-em dia
+O resumo exibe:
 
-ativas
+-   Total de usuários
+    
+-   Ativos
+    
+-   Inativos
+    
+-   Pendentes
+    
+-   Em dia
+    
+-   Percentual em dia
+    
 
-inativas
+E para o gráfico:
 
-Cada filtro é processado no hook useVisitasDashboard, garantindo consistência entre visualização e métricas.
+-   Em dia seguro
+    
+-   Vence hoje
+    
+-   Atraso leve
+    
+-   Atraso grave
+    
 
-3.5. Modos de Ordenação
+Essas métricas são geradas por `visitasMetrics.ts`.
 
-Três modos de ordenação foram implementados:
+----------
 
-urgência — lógica operacional: pendentes vêm primeiro, depois em dia, depois inativos
+### 3.7 Gráficos
 
-alfabética — comparação por locale pt-BR
+#### StatusPieChart
 
-recentes — usuários com última visita mais recente aparecem primeiro
+-   Exibe visualmente os status de cada pessoa.
+    
+-   Legenda fixa com ordem imutável.
+    
+-   Fatias aparecem apenas se houver valor, mas a legenda permanece estática.
+    
+-   Cada status tem uma cor específica e constante.
+    
 
-O dropdown de seleção aparece ao lado da busca.
+#### FrequencyBarChart
 
-3.6. Métricas Operacionais
+-   Agrupa usuários de acordo com `verify_frequency_in_days`.
+    
+-   Faixas: 1–3, 4–7, 8–14, 15–30, 31+.
+    
+-   Útil para entender a distribuição de frequências de visita.
+    
 
-O resumo exibido no topo inclui:
+----------
 
-total de usuários
+## 4. Arquitetura e Decisões de Projeto
 
-ativos
+### 4.1 Separação entre Lógica e UI
 
-inativos
+A lógica principal fica no hook `useVisitasDashboard`, permitindo que os componentes foquem apenas na exibição.
 
-pendentes
+### 4.2 Funções Puras e Testáveis
 
-em dia
+As regras de cálculo de pendência, atraso, vencimento e próximas datas são implementadas em funções puras, facilitando testes e manutenção.
 
-percentual de usuários em dia
+### 4.3 Eventos Customizados
 
-Além disso, para o gráfico de status, calcula-se:
+O evento `visita-registrada` permite atualizar o dashboard sem refazer todo o carregamento de dados.
 
-em dia seguro
+### 4.4 Estilização Modular
 
-vence hoje
+Os estilos utilizam SCSS Modules, garantindo isolamento e evitando conflitos entre componentes.
 
-atraso leve
+----------
 
-atraso grave
+## 5. Testes Implementados
 
-Essas métricas são consolidadas em visitasMetrics.ts.
+Os testes priorizaram as partes críticas e fundamentais da lógica operacional.
 
-3.7. Gráficos
-StatusPieChart
+### 5.1 Testes em `date.ts`
 
-Representa visualmente:
+Incluem:
 
-atraso grave
+-   Parse de datas
+    
+-   Cálculo da próxima visita
+    
+-   Verificação de pendência
+    
+-   Identificação de “vence hoje”
+    
+-   Cálculo de dias em atraso
+    
+-   Cálculo de dias para vencer
+    
+-   Formatação da data
+    
 
-atraso leve
+### 5.2 Testes em `visitasMetrics.ts`
 
-vence hoje
+Verificam:
 
-em dia
+-   Agrupamento por frequência
+    
+-   Cálculo de pendentes
+    
+-   Dias de atraso leve e grave
+    
+-   Percentual em dia
+    
+-   Vencendo hoje
+    
+-   Em dia seguro
+    
 
-inativos
+### 5.3 Testes em `sort.ts`
 
-A legenda é fixa e aparece sempre na mesma ordem, mesmo quando valores são zero. As cores são definidas manualmente e vinculadas às chaves.
+Valida:
 
-FrequencyBarChart
+-   Ordenação por urgência
+    
+-   Ativos antes de inativos
+    
+-   Pendentes antes de não pendentes
+    
+-   Ordenação pela próxima data de visita
+    
 
-Agrupa as visitas com base no intervalo de dias configurado:
+### 5.4 Testes em `UserCard`
 
-1–3 dias
+Incluem:
 
-4–7 dias
+-   Renderização das informações principais
+    
+-   Exibição correta de badges
+    
+-   Comportamento do botão de registrar visita
+    
+-   Prevenção de múltiplos cliques
+    
+-   Emissão do evento de atualização
 
-8–14 dias
-
-15–30 dias
-
-31+ dias
-
-Cada grupo corresponde ao atributo verify_frequency_in_days.
-
-4. Arquitetura e Decisões de Projeto
-4.1. Separação Lógica e Visual
-
-A lógica central do dashboard fica concentrada em useVisitasDashboard, enquanto os componentes cuidam exclusivamente de exibir dados.
-Isso simplifica testes, manutenção e evolução futura.
-
-4.2. Funções Puras
-
-As regras de cálculo (próxima visita, dias em atraso, vencendo hoje etc.) são funções puras e testadas isoladamente.
-Boa parte da confiabilidade do sistema depende dessas funções.
-
-4.3. Eventos Customizados
-
-O fluxo "registrar visita" utiliza eventos customizados para manter o app responsivo sem necessidade de recarregar toda a lista de usuários.
-
-4.4. SCSS Modules
-
-A aplicação usa SCSS Modules para manter estilos isolados, legíveis e fáceis de alterar sem risco de vazamento entre componentes.
-
-5. Testes Implementados
-
-Os testes focam nas partes mais críticas do projeto: regras de negócio, métricas e componentes essenciais.
-
-5.1. Tests em date.ts
-
-parse de datas
-
-cálculo de próxima visita
-
-detecção de pendência
-
-vencendo hoje
-
-dias em atraso
-
-dias para vencer
-
-formatação de datas
-
-5.2. Tests em visitasMetrics.ts
-
-contagem de ativos, inativos e pendentes
-
-dias em atraso (leve e grave)
-
-usuários em dia
-
-vencendo hoje
-
-em dia seguro
-
-percentual em dia
-
-agrupamento por frequência de dias
-
-5.3. Tests em sort.ts
-
-ordenação por urgência
-
-ativos antes de inativos
-
-pendentes antes de não pendentes
-
-comparação por próxima data de visita
-
-5.4. Tests em UserCard
-
-renderização das informações básicas
-
-exibição correta dos badges
-
-estado do botão “Registrar Visita”
-
-bloqueio contra múltiplos cliques
-
-disparo do evento global após chamada da função
-
-Esses testes garantem a corretude das regras centrais do sistema e validam a UI onde realmente importa.
+#### Não foi possível cobrir toda a aplicação com testes devido ao limite de tempo do desafio.
